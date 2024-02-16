@@ -6,6 +6,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.mbstudios.entities.Bullet;
+import com.mbstudios.entities.Enemy;
+import com.mbstudios.entities.Entity;
+import com.mbstudios.entities.Lifepack;
+import com.mbstudios.entities.Weapon;
+import com.mbstudios.main.Game;
+
 public class World {
 	
 	private Tile[] tiles;
@@ -22,14 +29,29 @@ public class World {
 			for(int xx = 0; xx < map.getWidth();xx++) {
 				for(int yy = 0; yy< map.getHeight(); yy++) {
 					int pixelAtual = pixels[xx + (yy*map.getWidth())];
+					tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
 					if(pixelAtual == 0xFF000000) {
+						//floor
 						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
 					}else if(pixelAtual == 0xFFFFFFFF) {
+						//wall
 						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_WALL);
 					}else if(pixelAtual == 0xFF0026FF) {
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
-					}else {
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
+						//player
+						Game.player.setX(xx*16);
+						Game.player.setY(yy*16);
+					}else if(pixelAtual == 0xFFFF0000){
+						//enemy
+						Game.entities.add(new Enemy(xx*16, yy*16,16,16, Entity.ENEMY_EN));
+					}else if(pixelAtual == 0xFFFFE97F) {
+						//bullet
+						Game.entities.add(new Bullet(xx*16, yy*16,16,16, Entity.BULLET_EN));
+					}else if(pixelAtual == 0xFFFF7F7F) {
+						//lifepack
+						Game.entities.add(new Lifepack(xx*16, yy*16,16,16, Entity.LIFEPACK_EN));
+					}else if(pixelAtual == 0xFF404040) {
+						//weapon
+						Game.entities.add(new Weapon(xx*16, yy*16,16,16, Entity.WEAPOM_EN));
 					}
 				}
 			}

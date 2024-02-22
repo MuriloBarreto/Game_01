@@ -52,7 +52,7 @@ public class Enemy extends Entity{
 					//Game Over
 					System.exit(1);
 				}
-				System.out.println("Vida: "+ Game.player.life);
+				//System.out.println("Vida: "+ Game.player.life);
 			}
 		}
 		

@@ -20,6 +20,9 @@ public class Enemy extends Entity{
 	private BufferedImage[] sprites;
 	
 	private int life = 10;
+	
+	private boolean isDamage = false;
+	private int damageFrames = 10,damageCurrent = 0;
 
 	public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, null);
@@ -73,9 +76,17 @@ public class Enemy extends Entity{
 				return;
 			}
 		
+			if(isDamage) {
+				this.damageCurrent++;
+				if(this.damageCurrent == this.damageFrames) {
+					this.damageCurrent = 0;
+					this.isDamage = false;
+				}
+			}
 	}
 	
 	public void destroySelf() {
+		Game.enemies.remove(this);
 		Game.entities.remove(this);
 	}
 	
@@ -84,6 +95,7 @@ public class Enemy extends Entity{
 		for(int i = 0; i < Game.bullets.size(); i++) {
 			Entity e = Game.bullets.get(i);
 			if(Entity.isColidding(this, e)) {
+					isDamage = true;
 					life--;
 					Game.bullets.remove(i);
 					return;
@@ -115,7 +127,11 @@ public class Enemy extends Entity{
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+		if(!isDamage) {
+			g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+		}else {
+			g.drawImage(Entity.ENEMY_FEEDBACK, this.getX() - Camera.x, this.getY() - Camera.y, null);
+		}
 		//g.setColor(Color.blue);
 		//g.fillRect(this.getX() + maskx - Camera.x,this.getY() + masky - Camera.y, maskw, maskh);
 	}

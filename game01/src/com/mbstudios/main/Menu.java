@@ -3,6 +3,7 @@ package com.mbstudios.main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Menu {
 	
@@ -11,7 +12,9 @@ public class Menu {
 	public int currentOption = 0;
 	public int maxOption = options.length -1;
 	
-	public boolean up, down;
+	public boolean up, down, enter;
+	
+	public boolean pause = false;
 	
 	public void tick() {
 		if(up) {
@@ -28,10 +31,18 @@ public class Menu {
 				currentOption = 0;
 			}
 		}
+		if(enter) {
+			enter = false;
+			if(options[currentOption] == "novo jogo" || options[currentOption] == "continuar") {
+				Game.gameState = "NORMAL";
+				pause = false;
+			}
+		}
 	}
 	
 	public void render(Graphics g) {
-		g.setColor(Color.black);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(new Color(0,0,0,100));
 		g.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
 		g.setColor(Color.red);
 		g.setFont(new Font("arial", Font.BOLD,36));
@@ -39,7 +50,10 @@ public class Menu {
 		
 		g.setColor(Color.white);
 		g.setFont(new Font("arial", Font.BOLD,24));
-		g.drawString("Novo jogo", (Game.WIDTH*Game.SCALE)/2 -50,160);
+		if(pause == false)
+			g.drawString("Novo jogo", (Game.WIDTH*Game.SCALE)/2 -50,160);
+		else
+			g.drawString("Continuar", (Game.WIDTH*Game.SCALE)/2 -50,160);
 		g.drawString("Carregar jogo", (Game.WIDTH*Game.SCALE)/2 -70,200);
 		g.drawString("Sair", (Game.WIDTH*Game.SCALE)/2 -10,240);
 		

@@ -34,6 +34,7 @@ public class Enemy extends Entity{
 	}
 	
 	public void tick() {
+		if(this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY())< 40) {
 		if(isColiddingWithPlayer() == false) {
 		if((int)x < Game.player.getX() && World.isFree((int)(x+speed), this.getY())
 				&& !isColidding((int)(x+speed), this.getY())) {
@@ -59,6 +60,7 @@ public class Enemy extends Entity{
 				
 				//System.out.println("Vida: "+ Game.player.life);
 			}
+		}
 		}
 		
 		

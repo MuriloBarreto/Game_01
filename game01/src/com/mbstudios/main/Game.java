@@ -4,14 +4,18 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +30,7 @@ import com.mbstudios.graficos.Spritesheet;
 import com.mbstudios.graficos.UI;
 import com.mbstudios.world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener, MouseListener{
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener, MouseMotionListener{
 	
 	/**
 	 * 
@@ -54,11 +58,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	
 	public UI ui;
 	
+//	public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("pixelfont.ttf");
+//	public Font newFont;
+	
 	public static String gameState = "MENU";
 	
 	private boolean showMessageGameOver = true;
 	private int framesGameOver = 0;
 	private boolean restartGame = false;
+	public int mx, my;
 	
 	public Menu menu;
 	
@@ -69,6 +77,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		rand = new Random();
 		addKeyListener(this);
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE,HEIGHT*SCALE));
 		initFrame();
 		ui = new UI();
@@ -81,6 +90,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		player = new Player(0,0,16,16,spritesheet.getSprite(32, 0, 16,16));
 		entities.add(player);
 		world = new World("/level1.png");	
+//		try {
+//			newFont = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
+//		} catch (FontFormatException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void initFrame() {
@@ -201,6 +219,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g.setFont(new Font("arial", Font.BOLD,20));
 		g.setColor(Color.white);
 		g.drawString("Munição: " + player.ammo, 585, 20);
+		//g.setFont(newFont);
+		//g.setColor(Color.red);
+		//g.drawString("Teste", 90, 90);
 		if(gameState == "GAME_OVER") {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(new Color(0,0,0,100));
@@ -215,6 +236,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		}else if(gameState == "MENU") {
 			menu.render(g);
 		}
+//		Graphics2D g2 = (Graphics2D) g;
+//		double angleMouse = Math.atan2(my - 200+25, mx - 200 + 25);
+//		g2.rotate(angleMouse,200+25,200+25);
+//		g.setColor(Color.red);
+//		g.fillRect(200, 200, 50, 50);
 		bs.show();
 	}
 	
@@ -357,6 +383,20 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		this.mx = e.getX();
+		this.my = e.getY();
 		
 	}
 }
